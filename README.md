@@ -1,6 +1,6 @@
 ## 1Password SCIM Bridge deployment examples
 
-Here you can find configuration files and best practice instructions for deploying the 1Password SCIM Bridge on various public and private cloud providers.
+Here you can find configuration files and best practice instructions for deploying the 1Password SCIM Bridge on Amazon Web Services, specific to the H3 production environment.
 
 ### Before Deploying 
 
@@ -8,7 +8,6 @@ Before you begin deploying the 1Password SCIM Bridge, please refer to the [Prepa
 
 ## Advanced Deployment Guides
 
-Advanced deployment are recommended when you have particular requirements for your environment. They are easily customizable and adaptable to your situation.
 - [AWS ECS Fargate with Terraform](/aws-ecsfargate-terraform)
 
 ## Support
