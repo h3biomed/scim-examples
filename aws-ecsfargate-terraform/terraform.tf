@@ -11,14 +11,12 @@ terraform {
 
 provider "aws" {
   region = var.aws_region
-}
-
-data "aws_vpc" "default" {
-  default = true
+  shared_credentials_file = "~/.aws/credentials"
+  profile                 = "h3-infrastructure"
 }
 
 data "aws_subnet_ids" "default_vpc_subnets" {
-  vpc_id = data.aws_vpc.default.id
+  vpc_id = "vpc-3fe34a5a"
 }
 
 resource "aws_secretsmanager_secret" "scimsession" {
@@ -116,12 +114,14 @@ resource "aws_ecs_service" "scim_bridge_service" {
 resource "aws_alb" "scim-bridge-alb" {
   name               = "scim-bridge-alb"
   load_balancer_type = "application"
-  subnets            = data.aws_subnet_ids.default_vpc_subnets.ids
+  subnets = ["subnet-4343486b", "subnet-6f579918"]
   security_groups    = [aws_security_group.scim-bridge-sg.id]
 }
 
 # Creating a security group for the load balancer:
 resource "aws_security_group" "scim-bridge-sg" {
+  vpc_id = "vpc-3fe34a5a"
+
   ingress {
     from_port   = 80
     to_port     = 80
@@ -145,6 +145,8 @@ resource "aws_security_group" "scim-bridge-sg" {
 }
 
 resource "aws_security_group" "service_security_group" {
+  vpc_id = "vpc-3fe34a5a"
+
   ingress {
     from_port = 3002
     to_port   = 3002
@@ -166,7 +168,7 @@ resource "aws_lb_target_group" "target_group_http" {
   port        = 3002
   protocol    = "HTTP"
   target_type = "ip"
-  vpc_id      = data.aws_vpc.default.id
+  vpc_id      = "vpc-3fe34a5a"
   health_check {
     matcher = "200,301,302"
     path    = "/"
